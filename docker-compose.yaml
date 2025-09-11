@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:17.6
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: user1
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: energy_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - backend
+  mcp-server:
+    build: ./mcp-server
+    container_name: mcp-server
+    environment:
+      DATABASE_URL: postgres://user1:pass123@postgres:5432/energy_db
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./mcp-server/:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+  chat-client:
+    build: ./chat-client
+    container_name: chat-client
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./chat-client/:/app
+      - /app/node_modules
+    depends_on:
+      - ollama
+      - mcp-server
+    networks:
+      - backend
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    networks:
+      - backend
+
+volumes:
+  ollama_models:
+  pg_data:
+
+networks:
+  backend:

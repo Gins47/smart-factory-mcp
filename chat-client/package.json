@@ -2,9 +2,9 @@
   "name": "mqtt-client",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node build/server.js",
     "build": "tsc"
   },
   "keywords": [],
@@ -13,9 +13,12 @@
   "type": "commonjs",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.5",
-    "axios": "^1.11.0"
+    "axios": "^1.11.0",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/mqtt": "^0.0.34",
     "@types/node": "^24.2.1",
     "ts-node": "^10.9.2",

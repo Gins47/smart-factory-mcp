@@ -6,7 +6,7 @@ const pg = new Client({ connectionString: process.env.DATABASE_URL });
 
 await pg.connect();
 
-async function getLatestRecord(machineId: string) {
+async function getLatestMachineRecord(machineId: string) {
   try {
     const res = await pg.query(
       `SELECT * FROM energy_records
@@ -24,20 +24,18 @@ async function getLatestRecord(machineId: string) {
 
 export function registerTools(server: McpServer) {
   server.tool(
-    "getLatestRecord",
-    "Gets latest energy record for a machine",
+    "get-machine-record",
+    "Gets latest record for a machine",
     {
       machineId: z.string(),
     },
-
     async ({ machineId }) => {
-      // Fetch data from MongoDB
-      console.log(`Fetching temperature for device ${machineId}`);
-      const energyRecord = await getLatestRecord(machineId);
-      if (energyRecord) {
-        console.log(`energyRecord = ${energyRecord}`);
+      // Fetch data from PostgreSQL
+      console.log(`Fetching record for machine ${machineId}`);
+      const machineRecord = await getLatestMachineRecord(machineId);
+      if (machineRecord) {
         return {
-          content: [{ type: "text", text: JSON.stringify(energyRecord) }],
+          content: [{ type: "text", text: JSON.stringify(machineRecord) }],
         };
       } else {
         return {

@@ -3,8 +3,8 @@ import { MCPClient } from "../core/mcpClient";
 export class MachineService {
   constructor(private readonly mcpClient: MCPClient) {}
 
-  async getLatestRecord(machineId: string) {
-    return this.mcpClient.callTool("getLatestRecord", {
+  async getLatestMachineRecord(machineId: string) {
+    return this.mcpClient.callTool("get-machine-record", {
       machineId,
     });
   }
